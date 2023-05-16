@@ -35,3 +35,8 @@ func (c *PgCompany) Exec(queryStr string, args ...any) (*sql.Result, error) {
 	result, err := c.Db.Exec(queryStr, args...)
 	return &result, err
 }
+
+// Query a db row using default context.
+func (c *PgCompany) QueryRow(queryStr string, args ...any) *sql.Row {
+	return c.Db.QueryRow(queryStr, args...)
+}

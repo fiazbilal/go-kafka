@@ -44,6 +44,13 @@ func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
 	// Routing & authorization.
 	// revive:disable
 	if req.Method == "GET" {
+		if url == "/api/v1/company/info" {
+			CompanyInfo(req, resp)
+			return
+		} else {
+			resp.Send(http.StatusNotFound)
+			return
+		}
 	} else if req.Method == "POST" {
 		if url == "/api/v1/company/create" {
 			CompanyCreate(req, resp)
@@ -53,6 +60,13 @@ func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
 			return
 		}
 	} else if req.Method == "PATCH" {
+		if url == "/api/v1/company/update" {
+			CompanyUpdate(req, resp)
+			return
+		} else {
+			resp.Send(http.StatusNotFound)
+			return
+		}
 	} else if req.Method == "DELETE" {
 		if url == "/api/v1/company/delete" {
 			CompanyDelete(req, resp)

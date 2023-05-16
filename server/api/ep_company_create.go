@@ -58,7 +58,7 @@ func CompanyCreate(req *Req, resp *Resp) {
 	}
 
 	// Send.
-	resp.SendStatus(RC_COMPANY_CREATE, &CompanyCreateResp{
+	resp.SendData(RC_COMPANY_CREATE, &CompanyCreateResp{
 		Id: companyId,
-	}, http.StatusAccepted)
+	})
 }
