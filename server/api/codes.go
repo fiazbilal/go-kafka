@@ -1,9 +1,5 @@
 package api
 
-import (
-	"company/sv"
-)
-
 const (
 	// Reserved
 	RC_E_NO_BODY   sv.RespCode = 2999
