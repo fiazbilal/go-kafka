@@ -175,6 +175,7 @@ go run ./server/api/cmd/main.go
 
 ## Testing Using CURL Command From Terminal
 #### Create Company
+
 ```bash
 curl -X POST 'localhost:8000/api/v1/company/create' -H 'Content-Type: application/json' -d '{
     "name": "Test Inc.",
@@ -185,7 +186,24 @@ curl -X POST 'localhost:8000/api/v1/company/create' -H 'Content-Type: applicatio
 }'
 ```
 
-image.png
 #### Get Company Info
+
+```bash
+curl -X GET 'localhost:8000/api/v1/company/info?uuid=fbf66a96-bfcb-4f9a-b716-9e18dc292cf1'
+```
+
 #### Update Company Info
+
+```bash
+curl -X PATCH 'localhost:8000/api/v1/company/update' -H 'Content-Type: application/json' -d '{"id":"fbf66a96-bfcb-4f9a-b716-9e18dc292cf1",
+    "name": "Updated Inc.",
+    "employees": 5000,
+    "type": "NonProfit"
+}'
+```
+
 #### Delete Company
+
+```bash
+curl -X DELETE 'localhost:8000/api/v1/company/delete?uuid=fbf66a96-bfcb-4f9a-b716-9e18dc292cf1'
+```
