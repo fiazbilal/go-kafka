@@ -1,0 +1,8 @@
+CREATE TABLE companies (
+  id UUID PRIMARY KEY,
+  name VARCHAR(15) UNIQUE NOT NULL,
+  description VARCHAR(3000),
+  employees INT NOT NULL,
+  registered BOOLEAN NOT NULL,
+  company_type VARCHAR(50) NOT NULL
+);
