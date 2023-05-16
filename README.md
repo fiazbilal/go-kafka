@@ -1,5 +1,35 @@
 # company
 
+## Problem Statement
+#### Technical requirements 
+Build a microservice to handle companies. It should provide the following operations: 
+    • Create 
+    • Patch 
+    • Delete
+    • Get One
+Each company is defined by the following attributes: 
+    • ID (uuid) required 
+    • Name (15 characters) required - unique 
+    • Description (3000 characters) optional 
+    • Amount of Employees (int) required 
+    • Registered (boolean) required 
+    • Type (Corporations | NonProfit | Cooperative | Sole Proprietorship) required 
+
+#### Expectations: 
+As a deliverable, we expect a GitHub repository (or any other git based repo) with the source code. We would like the solution to contain clear instructions to set up and execute the project. 
+We expect the solution to be production ready. 
+
+#### Will be considered a plus: 
+On each mutating operation, an event should be produced. 
+Dockerize the application to be ready for building the production docker image 
+Use docker for setting up the external services such as the database 
+REST is suggested, but GRPC is also an option 
+JWT for authentication 
+Kafka for events 
+DB is up to you 
+Integration tests are highly appreciated
+Configuration file 
+
 ## Setup
 
 The following setup procedures assume you are on a relatively fresh machine,
@@ -143,3 +173,19 @@ psql -U company
 go run ./server/api/cmd/main.go
 ```
 
+## Testing Using CURL Command From Terminal
+#### Create Company
+```bash
+curl -X POST 'localhost:8000/api/v1/company/create' -H 'Content-Type: application/json' -d '{
+    "name": "Test Inc.",
+    "description": "This is a test company",
+    "employees": 100,
+    "registered": true,
+    "type": "Sole"
+}'
+```
+
+image.png
+#### Get Company Info
+#### Update Company Info
+#### Delete Company
