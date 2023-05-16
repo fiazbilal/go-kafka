@@ -10,4 +10,7 @@ const (
 
 	// POST /api/v1/company/create
 	RC_COMPANY_CREATE server.RespCode = 1000
+
+	// POST /api/v1/company/delete
+	RC_COMPANY_DELETE server.RespCode = 1000
 )

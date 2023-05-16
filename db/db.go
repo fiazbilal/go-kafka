@@ -40,3 +40,11 @@ func (c *CompanyDbC) CreateCompany(company *CompanyCreateTup) error {
 
 	return err
 }
+
+func (c *CompanyDbC) DeleteCompany(id uuid.UUID) error {
+	_, err := c.Pg.Exec("DELETE FROM companies WHERE id = $1", id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

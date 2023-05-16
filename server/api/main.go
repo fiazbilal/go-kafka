@@ -54,6 +54,13 @@ func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
 		}
 	} else if req.Method == "PATCH" {
 	} else if req.Method == "DELETE" {
+		if url == "/api/v1/company/delete" {
+			CompanyDelete(req, resp)
+			return
+		} else {
+			resp.Send(http.StatusNotFound)
+			return
+		}
 	} else {
 		resp.Send(http.StatusMethodNotAllowed)
 		return
