@@ -1,8 +1,10 @@
 package db
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
-type CompanyCreate struct {
+type CompanyCreateTup struct {
 	Id          uuid.UUID
 	Name        string
 	Description string
@@ -11,9 +13,9 @@ type CompanyCreate struct {
 	Type        string
 }
 
-func (c *CompanyDbC) CreateCompany(company *CompanyCreate) error {
+func (c *CompanyDbC) CreateCompany(company *CompanyCreateTup) error {
 	_, err := c.Pg.Exec(
-		`INSERT INTO company (
+		`INSERT INTO companies (
             id,
             name,
             description,
@@ -35,5 +37,6 @@ func (c *CompanyDbC) CreateCompany(company *CompanyCreate) error {
 		company.Registered,
 		company.Type,
 	)
+
 	return err
 }

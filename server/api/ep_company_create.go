@@ -1,6 +1,7 @@
 package api
 
 import (
+	"company/db"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -22,25 +23,39 @@ type CompanyCreateResp struct {
 }
 
 func CompanyCreate(req *Req, resp *Resp) {
-
-	fmt.Printf("I am here")
 	// Parse req body.
 	defer req.Body.Close()
 	rawBody, err := io.ReadAll(req.Body)
 	if err != nil {
-		fmt.Errorf("failed to parse req body: %v", err)
+		fmt.Println("failed to parse req body: %v", err)
 		resp.Send(RC_E_NO_BODY)
 		return
 	}
 
 	body := &CompanyCreateReq{}
 	if err := json.Unmarshal(rawBody, body); err != nil {
-		fmt.Errorf("failed to parse JSON object: %v", err)
+		fmt.Println("failed to parse JSON object: %v", err)
 		resp.Send(RC_E_MALFORMED)
 		return
 	}
 
 	companyId := uuid.New()
+	companyTup := &db.CompanyCreateTup{
+		Id:          companyId,
+		Name:        body.Name,
+		Description: body.Desc,
+		Employees:   body.NoOfEmployees,
+		Registered:  body.Registered,
+		Type:        body.Type,
+	}
+
+	// Company create.
+	err = c.CompanyDb.CreateCompany(companyTup)
+	if err != nil {
+		fmt.Println("failed to add company by Id=%v: %v", companyId, err)
+		resp.Send(http.StatusInternalServerError)
+		return
+	}
 
 	// Send.
 	resp.SendStatus(RC_COMPANY_CREATE, &CompanyCreateResp{

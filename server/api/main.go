@@ -1,6 +1,8 @@
 package api
 
 import (
+	"company/server"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,14 +10,19 @@ import (
 )
 
 type Req struct {
-	sv.Req
+	server.Req
 }
 
 type Resp struct {
-	sv.Resp
+	server.Resp
 }
 
-func Main() {
+func Main(init bool) {
+	if init {
+		flag.Parse()
+		c = Init()
+	}
+
 	listenUrl := "localhost:8000"
 	srvr := http.NewServeMux()
 	srvr.HandleFunc("/", MainHandler)
@@ -24,15 +31,15 @@ func Main() {
 }
 
 func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
-	req := &Req{Req: sv.Req{Request: httpReq}}
-	resp := &Resp{Resp: sv.Resp{ResponseWriter: w}}
+	req := &Req{Req: server.Req{Request: httpReq}}
+	resp := &Resp{Resp: server.Resp{ResponseWriter: w}}
 
 	url := req.URL.Path
 	if url != "/" {
 		url = strings.TrimRight(req.URL.Path, "/")
 	}
 
-	fmt.Printf("%v %v\n", req.Method, url)
+	fmt.Println(req.Method, url)
 
 	// Routing & authorization.
 	// revive:disable
