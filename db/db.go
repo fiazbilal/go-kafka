@@ -4,6 +4,27 @@ import (
 	"github.com/google/uuid"
 )
 
+type CompanyType string
+
+var (
+	COMPANY_TYPE_NULL           CompanyType = ""
+	COMPANY_TYPE_CORPORATIONS   CompanyType = "CORPORATIONS"
+	COMPANY_TYPE_NONPROFIT      CompanyType = "NONPROFIT"
+	COMPANY_TYPE_COOPERATIVE    CompanyType = "COOPERATIVE"
+	COMPANY_TYPE_SOLE           CompanyType = "SOLE"
+	COMPANY_TYPE_PROPRIETORSHIP CompanyType = "PROPRIETORSHIP"
+)
+
+// Safely scans db value of type *MJobStatus.
+func ScanCompanyType(src *CompanyType) (dest CompanyType) {
+	if src == nil {
+		dest = COMPANY_TYPE_NULL
+		return
+	}
+	dest = *src
+	return
+}
+
 type CompanyCreateTup struct {
 	Id          uuid.UUID
 	Name        string

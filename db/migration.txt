@@ -4,5 +4,5 @@ CREATE TABLE companies (
   description VARCHAR(3000),
   employees INT NOT NULL,
   registered BOOLEAN NOT NULL,
-  company_type VARCHAR(50) NOT NULL
+  type VARCHAR(50) NOT NULL
 );
