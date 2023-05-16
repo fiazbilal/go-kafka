@@ -8,6 +8,14 @@ import (
 	"strings"
 )
 
+type Req struct {
+	sv.Req
+}
+
+type Resp struct {
+	sv.Resp
+}
+
 func Main() {
 	listenUrl := "localhost:8000"
 	srvr := http.NewServeMux()
@@ -25,7 +33,7 @@ func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
 		url = strings.TrimRight(req.URL.Path, "/")
 	}
 
-	fmt.Printf("%v %v", req.Method, url)
+	fmt.Printf("%v %v\n", req.Method, url)
 
 	// Routing & authorization.
 	// revive:disable

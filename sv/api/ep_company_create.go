@@ -17,7 +17,13 @@ type CompanyCreateReq struct {
 	Type          string `json:"type"`
 }
 
-func CompanyCreate(resp http.ResponseWriter, req *http.Request) {
+type CompanyCreateResp struct {
+	Id uuid.UUID `json:"id"`
+}
+
+func CompanyCreate(req *Req, resp *Resp) {
+
+	fmt.Printf("I am here")
 	// Parse req body.
 	defer req.Body.Close()
 	rawBody, err := io.ReadAll(req.Body)
@@ -27,28 +33,17 @@ func CompanyCreate(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	body := &MJobCreateReq{}
+	body := &CompanyCreateReq{}
 	if err := json.Unmarshal(rawBody, body); err != nil {
 		fmt.Errorf("failed to parse JSON object: %v", err)
 		resp.Send(RC_E_MALFORMED)
 		return
 	}
 
-	jobId := uuid.New()
-	jobTup := &mjob_db.MJobTup{
-		Id:     jobId,
-		Name:   body.Name,
-		Status: string(mjob_db.MJOB_STATUS_READY),
-	}
-
-	if err := c.MJobDb.JobCreate(jobTup); err != nil {
-		fmt.Errorf("failed to create job: %v", err)
-		resp.Send(http.StatusInternalServerError)
-		return
-	}
+	companyId := uuid.New()
 
 	// Send.
-	resp.SendStatus(RC_MJOB_CREATE, &MJobCreateResp{
-		JobId: jobId,
+	resp.SendStatus(RC_COMPANY_CREATE, &CompanyCreateResp{
+		Id: companyId,
 	}, http.StatusAccepted)
 }
