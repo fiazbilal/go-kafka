@@ -1,6 +1,7 @@
 package api
 
 import (
+	"company/sv"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,7 +16,9 @@ func Main() {
 	log.Fatal(http.ListenAndServe(listenUrl, srvr))
 }
 
-func MainHandler(resp http.ResponseWriter, req *http.Request) {
+func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
+	req := &Req{Req: sv.Req{Request: httpReq}}
+	resp := &Resp{Resp: sv.Resp{ResponseWriter: w}}
 
 	url := req.URL.Path
 	if url != "/" {
@@ -28,10 +31,10 @@ func MainHandler(resp http.ResponseWriter, req *http.Request) {
 	// revive:disable
 	if req.Method == "GET" {
 	} else if req.Method == "POST" {
-		if url == "/api/mjob/v1/job/create" {
+		if url == "/api/v1/company/create" {
 			CompanyCreate(req, resp)
 			return
-		} else
+		} else {
 			resp.Send(http.StatusNotFound)
 			return
 		}

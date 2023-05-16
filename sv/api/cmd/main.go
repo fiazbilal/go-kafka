@@ -1,6 +1,6 @@
 package main
 
-import "company/api"
+import "company/sv/api"
 
 func main() {
 	api.Main()
