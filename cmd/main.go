@@ -1,7 +1,7 @@
 package main
 
-import "company/be/api"
+import "company/api"
 
 func main() {
-	api.Main(true)
+	api.Main()
 }

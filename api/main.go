@@ -1,39 +1,27 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
+	"strings"
 )
 
-func main() {
-	router := mux.NewRouter()
-
-	// Define your API routes
-	router.HandleFunc("/companies", createCompany).Methods("POST")
-	router.HandleFunc("/companies/{id}", getCompany).Methods("GET")
-	router.HandleFunc("/companies/{id}", updateCompany).Methods("PATCH")
-	router.HandleFunc("/companies/{id}", deleteCompany).Methods("DELETE")
-
-	port := ":8000" // Change the port number if needed
-
-	log.Printf("Server started. Listening on port %s", port)
-	log.Fatal(http.ListenAndServe(port, router))
+func Main() {
+	listenUrl := "localhost:8000"
+	srvr := http.NewServeMux()
+	srvr.HandleFunc("/", MainHandler)
+	log.Printf("listening on %s", listenUrl)
+	log.Fatal(http.ListenAndServe(listenUrl, srvr))
 }
 
-func createCompany(w http.ResponseWriter, r *http.Request) {
-	// Implement the logic for creating a company
-}
+func MainHandler(w http.ResponseWriter, req *http.Request) {
 
-func getCompany(w http.ResponseWriter, r *http.Request) {
-	// Implement the logic for retrieving a company
-}
+	url := req.URL.Path
+	if url != "/" {
+		url = strings.TrimRight(req.URL.Path, "/")
+	}
 
-func updateCompany(w http.ResponseWriter, r *http.Request) {
-	// Implement the logic for updating a company
-}
+	fmt.Printf("URL: %s", url)
 
-func deleteCompany(w http.ResponseWriter, r *http.Request) {
-	// Implement the logic for deleting a company
 }
