@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -39,6 +40,23 @@ func CompanyCreate(req *Req, resp *Resp) {
 		return
 	}
 
+	companyTypeStr := strings.ToUpper(body.Type)
+	var companyType db.CompanyType
+	if companyTypeStr == "CORPORATIONS" {
+		companyType = db.COMPANY_TYPE_CORPORATIONS
+	} else if companyTypeStr == "NONPROFIT" {
+		companyType = db.COMPANY_TYPE_NONPROFIT
+	} else if companyTypeStr == "COOPERATIVE" {
+		companyType = db.COMPANY_TYPE_COOPERATIVE
+	} else if companyTypeStr == "SOLE" {
+		companyType = db.COMPANY_TYPE_SOLE
+	} else if companyTypeStr == "PROPRIETORSHIP" {
+		companyType = db.COMPANY_TYPE_PROPRIETORSHIP
+	} else {
+		resp.Send(RC_E_COMPANY_CREATE_INVALID_TYPE)
+		return
+	}
+
 	companyId := uuid.New()
 	companyTup := &db.CompanyCreateTup{
 		Id:          companyId,
@@ -46,7 +64,7 @@ func CompanyCreate(req *Req, resp *Resp) {
 		Description: body.Desc,
 		Employees:   body.NoOfEmployees,
 		Registered:  body.Registered,
-		Type:        body.Type,
+		Type:        string(companyType),
 	}
 
 	// Company create.

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -68,7 +69,23 @@ func CompanyUpdate(req *Req, resp *Resp) {
 		companyTup.Registered = body.Registered
 	}
 	if body.Type != company.Type {
-		companyTup.Type = body.Type
+		companyTypeStr := strings.ToUpper(body.Type)
+		var companyType db.CompanyType
+		if companyTypeStr == "CORPORATIONS" {
+			companyType = db.COMPANY_TYPE_CORPORATIONS
+		} else if companyTypeStr == "NONPROFIT" {
+			companyType = db.COMPANY_TYPE_NONPROFIT
+		} else if companyTypeStr == "COOPERATIVE" {
+			companyType = db.COMPANY_TYPE_COOPERATIVE
+		} else if companyTypeStr == "SOLE" {
+			companyType = db.COMPANY_TYPE_SOLE
+		} else if companyTypeStr == "PROPRIETORSHIP" {
+			companyType = db.COMPANY_TYPE_PROPRIETORSHIP
+		} else {
+			resp.Send(RC_E_COMPANY_UPDATE_INVALID_TYPE)
+			return
+		}
+		companyTup.Type = string(companyType)
 	}
 
 	// Update the company record in the database.
