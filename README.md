@@ -2,18 +2,18 @@
 
 ## Problem Statement
 #### Technical requirements 
-Build a microservice to handle companies. It should provide the following operations: 
-    • Create 
-    • Patch 
-    • Delete
-    • Get One
-Each company is defined by the following attributes: 
-    • ID (uuid) required 
-    • Name (15 characters) required - unique 
-    • Description (3000 characters) optional 
-    • Amount of Employees (int) required 
-    • Registered (boolean) required 
-    • Type (Corporations | NonProfit | Cooperative | Sole Proprietorship) required 
+Build a microservice to handle companies. It should provide the following operations:
+• Create 
+• Patch 
+• Delete
+• Get One
+Each company is defined by the following attributes:
+• ID (uuid) required 
+• Name (15 characters) required - unique 
+• Description (3000 characters) optional 
+• Amount of Employees (int) required 
+• Registered (boolean) required 
+• Type (Corporations | NonProfit | Cooperative | Sole Proprietorship) required 
 
 #### Expectations: 
 As a deliverable, we expect a GitHub repository (or any other git based repo) with the source code. We would like the solution to contain clear instructions to set up and execute the project. 
@@ -83,6 +83,12 @@ sudo systemctl restart postgresql@15-main.service
 ```
 
 ### Configuration
+
+#### Git
+
+```bash
+git init
+```
 
 #### Golang
 
@@ -189,13 +195,13 @@ curl -X POST 'localhost:8000/api/v1/company/create' -H 'Content-Type: applicatio
 #### Get Company Info
 
 ```bash
-curl -X GET 'localhost:8000/api/v1/company/info?uuid=fbf66a96-bfcb-4f9a-b716-9e18dc292cf1'
+curl -X GET 'localhost:8000/api/v1/company/info?uuid=<COMPANY_ID>'
 ```
 
 #### Update Company Info
 
 ```bash
-curl -X PATCH 'localhost:8000/api/v1/company/update' -H 'Content-Type: application/json' -d '{"id":"fbf66a96-bfcb-4f9a-b716-9e18dc292cf1",
+curl -X PATCH 'localhost:8000/api/v1/company/update' -H 'Content-Type: application/json' -d '{"id":"<COMPANY_ID>",
     "name": "Updated Inc.",
     "employees": 5000,
     "type": "NonProfit"
@@ -205,5 +211,5 @@ curl -X PATCH 'localhost:8000/api/v1/company/update' -H 'Content-Type: applicati
 #### Delete Company
 
 ```bash
-curl -X DELETE 'localhost:8000/api/v1/company/delete?uuid=fbf66a96-bfcb-4f9a-b716-9e18dc292cf1'
+curl -X DELETE 'localhost:8000/api/v1/company/delete?uuid=<COMPANY_ID>'
 ```
