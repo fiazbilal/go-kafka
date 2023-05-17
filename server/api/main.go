@@ -1,6 +1,7 @@
 package api
 
 import (
+	util "company/libgo"
 	"company/server"
 	"flag"
 	"fmt"
@@ -23,7 +24,7 @@ func Main(init bool) {
 		c = Init()
 	}
 
-	listenUrl := "localhost:8000"
+	listenUrl := util.MustOsGetEnv("API_LISTEN_URL")
 	srvr := http.NewServeMux()
 	srvr.HandleFunc("/", MainHandler)
 	log.Printf("listening on %s", listenUrl)

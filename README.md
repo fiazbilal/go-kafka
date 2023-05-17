@@ -179,6 +179,11 @@ psql -U company
 go run ./server/api/cmd/main.go
 ```
 
+To load env
+```bash
+source ./server/api/cmd/.env
+```
+
 ## Testing Using CURL Command From Terminal
 #### Create Company
 

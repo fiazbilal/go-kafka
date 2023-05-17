@@ -3,6 +3,7 @@ package api
 import (
 	"company/db"
 	"company/db/pg"
+	util "company/libgo"
 )
 
 var c *Client
@@ -15,7 +16,7 @@ type Client struct {
 
 func Init() *Client {
 	c = &Client{}
-	c.Pg = pg.InitPgCompany("host=localhost port=5432 user=mslm password=mslm dbname=company connect_timeout=2")
+	c.Pg = pg.InitPgCompany(util.MustOsGetEnv("DB_URL"))
 
 	c.CompanyDb = db.Init(
 		c.Pg,
