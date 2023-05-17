@@ -28,14 +28,14 @@ func CompanyCreate(req *Req, resp *Resp) {
 	defer req.Body.Close()
 	rawBody, err := io.ReadAll(req.Body)
 	if err != nil {
-		fmt.Println("failed to parse req body: %v", err)
+		fmt.Printf("failed to parse req body: %v\n", err)
 		resp.Send(RC_E_NO_BODY)
 		return
 	}
 
 	body := &CompanyCreateReq{}
 	if err := json.Unmarshal(rawBody, body); err != nil {
-		fmt.Println("failed to parse JSON object: %v", err)
+		fmt.Printf("failed to parse JSON object: %v\n", err)
 		resp.Send(RC_E_MALFORMED)
 		return
 	}
@@ -70,7 +70,7 @@ func CompanyCreate(req *Req, resp *Resp) {
 	// Company create.
 	err = c.CompanyDb.CreateCompany(companyTup)
 	if err != nil {
-		fmt.Println("failed to add company by Id=%v: %v", companyId, err)
+		fmt.Printf("failed to add company by Id=%v: %v\n", companyId, err)
 		resp.Send(http.StatusInternalServerError)
 		return
 	}

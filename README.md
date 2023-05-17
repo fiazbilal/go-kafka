@@ -151,7 +151,7 @@ psql -U postgres -c "CREATE DATABASE company OWNER company"
 Create table as,
 
 ```bash
-psql -U company
+psql -d company
 ```
 
 ```bash

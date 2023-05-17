@@ -24,8 +24,8 @@ func CompanyInfo(req *Req, resp *Resp) {
 	companyIdStr := qVals.Get("uuid")
 	companyId, err := uuid.Parse(companyIdStr)
 	if err != nil {
-		fmt.Println(
-			"failed to parse companyIdStr=%s: %v",
+		fmt.Printf(
+			"failed to parse companyIdStr=%s: %v\n",
 			companyIdStr, err,
 		)
 		resp.Send(http.StatusBadRequest)
@@ -35,7 +35,7 @@ func CompanyInfo(req *Req, resp *Resp) {
 	// Retrieve company info.
 	companyTup, err := c.CompanyDb.GetCompanyById(companyId)
 	if err != nil {
-		fmt.Println("failed to get company info by Id=%v: %v", companyId, err)
+		fmt.Printf("failed to get company info by Id=%v: %v\n", companyId, err)
 		resp.Send(http.StatusNotFound)
 		return
 	}

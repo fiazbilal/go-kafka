@@ -25,14 +25,14 @@ func CompanyUpdate(req *Req, resp *Resp) {
 	defer req.Body.Close()
 	rawBody, err := io.ReadAll(req.Body)
 	if err != nil {
-		fmt.Println("failed to parse req body: %v", err)
+		fmt.Printf("failed to parse req body: %v\n", err)
 		resp.Send(RC_E_NO_BODY)
 		return
 	}
 
 	body := &CompanyUpdateReq{}
 	if err := json.Unmarshal(rawBody, body); err != nil {
-		fmt.Println("failed to parse JSON object: %v", err)
+		fmt.Printf("failed to parse JSON object: %v\n", err)
 		resp.Send(RC_E_MALFORMED)
 		return
 	}
@@ -40,7 +40,7 @@ func CompanyUpdate(req *Req, resp *Resp) {
 	// Get the current company record from the database.
 	company, err := c.CompanyDb.GetCompanyById(body.Id)
 	if err != nil {
-		fmt.Println("failed to get company by Id=%v: %v", body.Id, err)
+		fmt.Printf("failed to get company by Id=%v: %v\n", body.Id, err)
 		resp.Send(http.StatusInternalServerError)
 		return
 	}
@@ -91,7 +91,7 @@ func CompanyUpdate(req *Req, resp *Resp) {
 	// Update the company record in the database.
 	err = c.CompanyDb.UpdateCompany(companyTup)
 	if err != nil {
-		fmt.Println("failed to update company by Id=%v: %v", body.Id, err)
+		fmt.Printf("failed to update company by Id=%v: %v\n", body.Id, err)
 		resp.Send(http.StatusInternalServerError)
 		return
 	}
