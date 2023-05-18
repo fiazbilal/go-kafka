@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 )
 
@@ -72,6 +73,29 @@ func CompanyCreate(req *Req, resp *Resp) {
 		resp.Send(http.StatusInternalServerError)
 		return
 	}
+
+	go func() {
+		// Send to Kafka.
+		producer, err := kafka.NewProducer(&kafka.ConfigMap{
+			"bootstrap.servers": c.kafkaServerUrl,
+		})
+		if err != nil {
+			fmt.Printf("Failed to create producer: %v\n", err)
+			return
+		}
+		defer producer.Close()
+
+		topic := "company_created"
+		msg := &kafka.Message{
+			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+			Value:          []byte(companyId.String()),
+		}
+		err = producer.Produce(msg, nil)
+		if err != nil {
+			fmt.Printf("Failed to produce message: %v\n", err)
+			return
+		}
+	}()
 
 	// Send.
 	resp.SendData(RC_COMPANY_CREATE, &CompanyCreateResp{
