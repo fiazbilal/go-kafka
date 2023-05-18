@@ -35,7 +35,7 @@ func CompanyDelete(req *Req, resp *Resp) {
 	go func() {
 		// Send to Kafka.
 		producer, err := kafka.NewProducer(&kafka.ConfigMap{
-			"bootstrap.servers": "localhost:9092",
+			"bootstrap.servers": c.kafkaServerUrl,
 		})
 		if err != nil {
 			fmt.Printf("Failed to create producer: %v\n", err)

@@ -9,7 +9,8 @@ import (
 var c *Client
 
 type Client struct {
-	Pg *pg.PgCompany
+	Pg             *pg.PgCompany
+	kafkaServerUrl string
 
 	CompanyDb *db.CompanyDbC
 }
@@ -17,6 +18,7 @@ type Client struct {
 func Init() *Client {
 	c = &Client{}
 	c.Pg = pg.InitPgCompany(util.MustOsGetEnv("DB_URL"))
+	c.kafkaServerUrl = util.MustOsGetEnv("KAFKA_SERVER_URL")
 
 	c.CompanyDb = db.Init(
 		c.Pg,
