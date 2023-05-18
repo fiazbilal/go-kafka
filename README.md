@@ -197,6 +197,11 @@ psql -U company
 go run ./server/api/cmd/main.go
 ```
 
+
+```bash
+go run ./server/kafka-consumer/cmd/main.go
+```
+
 Go to kafka folder(home/Downloads/kafka_2.13-3.4.0/) and run these commands in sperate terminals,
 
 ```bash
@@ -207,6 +212,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties
 ```
 
+optional for testing the kafka queue that it's working or not?
 ```bash
 bin/kafka-console-consumer.sh --topic <TOPIC_NAME> --from-beginning --bootstrap-server localhost:9092
 ```
