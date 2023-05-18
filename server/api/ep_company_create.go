@@ -57,9 +57,7 @@ func CompanyCreate(req *Req, resp *Resp) {
 		return
 	}
 
-	companyId := uuid.New()
 	companyTup := &db.CompanyCreateTup{
-		Id:          companyId,
 		Name:        body.Name,
 		Description: body.Desc,
 		Employees:   body.NoOfEmployees,
@@ -68,9 +66,9 @@ func CompanyCreate(req *Req, resp *Resp) {
 	}
 
 	// Company create.
-	err = c.CompanyDb.CreateCompany(companyTup)
+	companyId, err := c.CompanyDb.CreateCompany(companyTup)
 	if err != nil {
-		fmt.Printf("failed to add company by Id=%v: %v\n", companyId, err)
+		fmt.Printf("failed to add company: %v\n", err)
 		resp.Send(http.StatusInternalServerError)
 		return
 	}

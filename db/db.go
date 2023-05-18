@@ -26,7 +26,6 @@ func ScanCompanyType(src *CompanyType) (dest CompanyType) {
 }
 
 type CompanyCreateTup struct {
-	Id          uuid.UUID
 	Name        string
 	Description string
 	Employees   int
@@ -34,32 +33,30 @@ type CompanyCreateTup struct {
 	Type        string
 }
 
-func (c *CompanyDbC) CreateCompany(company *CompanyCreateTup) error {
-	_, err := c.Pg.Exec(
-		`INSERT INTO companies (
-            id,
-            name,
-            description,
-            employees,
-            registered,
-            type
-        ) VALUES (
-            $1,
-            $2,
-            $3,
-            $4,
-            $5,
-            $6
-        )`,
-		company.Id,
-		company.Name,
-		company.Description,
-		company.Employees,
-		company.Registered,
-		company.Type,
-	)
+func (c *CompanyDbC) CreateCompany(company *CompanyCreateTup) (uuid.UUID, error) {
+	var id uuid.UUID
+	params := []any{company.Name, company.Description, company.Employees, company.Registered, company.Type}
+	qStr := `
+	INSERT INTO companies (
+		name,
+		description,
+		employees,
+		registered,
+		type
+	) VALUES (
+		$1,
+		$2,
+		$3,
+		$4,
+		$5
+	) RETURNING id`
 
-	return err
+	err := c.Pg.QueryRow(qStr, params...).Scan(&id)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	return id, nil
 }
 
 func (c *CompanyDbC) DeleteCompany(id uuid.UUID) error {

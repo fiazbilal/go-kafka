@@ -110,7 +110,7 @@ export PATH=$PATH:$GOROOT/bin
 export PATH=$PATH:$GOPATH/bin
 ```
 
-#### `company` Repository
+#### `Company` Repository
 
 Setup your SSH public/private key pair locally, after replacing `<email>` with
 your email address (you can ignore entering any password, just hit `Enter` for
