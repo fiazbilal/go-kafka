@@ -82,6 +82,24 @@ Save the file, and then restart your server:
 sudo systemctl restart postgresql@15-main.service
 ```
 
+#### Kafka
+
+Set up a Kafka using the guidline [Kafka site](https://kafka.apache.org/quickstart).
+or follow bellow bash instructions,
+
+```bash 
+cd Downloads
+```
+
+```bash 
+wget https://dlcdn.apache.org/kafka/3.4.0/kafka_2.13-3.4.0.tgz
+```
+
+```bash
+tar -xzf kafka_2.13-3.4.0.tgz
+cd kafka_2.13-3.4.0/
+```
+
 ### Configuration
 
 #### Git
@@ -177,6 +195,24 @@ psql -U company
 
 ```bash
 go run ./server/api/cmd/main.go
+```
+
+Go to kafka folder(home/Downloads/kafka_2.13-3.4.0/) and run these commands in sperate terminals,
+
+```bash
+bin/zookeeper-server-start.sh config/zookeeper.properties
+```
+
+```bash
+bin/kafka-server-start.sh config/server.properties
+```
+
+```bash
+bin/kafka-console-consumer.sh --topic <TOPIC_NAME> --from-beginning --bootstrap-server localhost:9092
+```
+
+```bash
+bin/kafka-console-producer.sh --topic <TOPIC_NAME> --bootstrap-server localhost:9092
 ```
 
 To load env
