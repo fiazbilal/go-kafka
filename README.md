@@ -55,6 +55,15 @@ sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
 rm go1.19.4.linux-amd64.tar.gz
 ```
 
+#### Java
+
+Java may be used by some utilities.
+
+```bash
+sudo apt install -y openjdk-18-jdk
+```
+
+
 #### Postgres
 
 ```bash
