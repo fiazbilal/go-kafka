@@ -29,16 +29,16 @@ func Main() {
 		"group.id":          groupId,
 		"auto.offset.reset": "earliest",
 	})
-	// Close the consumer
-	defer consumer.Close()
-
 	if err != nil {
 		fmt.Printf("Failed to create consumer: %v\n", err)
 		return
 	}
 
+	// Close the consumer
+	defer consumer.Close()
+
 	// Subscribe to topics
-	consumer.SubscribeTopics([]string{"company_created", "company_deleted", "company_updated", "company_info"}, nil)
+	consumer.SubscribeTopics([]string{"cloud_events"}, nil)
 
 	// Start consuming messages
 	for {

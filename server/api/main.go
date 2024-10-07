@@ -1,83 +1,114 @@
 package api
 
 import (
-	util "company/libgo"
-	"company/server"
-	"flag"
-	"fmt"
 	"log"
-	"net/http"
-	"strings"
+	"os"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
-type Req struct {
-	server.Req
+// User represents a basic user structure
+type User struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
-type Resp struct {
-	server.Resp
+var users = []User{
+	{ID: 1, Name: "John Doe", Age: 25},
+	{ID: 2, Name: "Jane Doe", Age: 30},
 }
 
-func Main(init bool) {
-	if init {
-		flag.Parse()
-		c = Init()
+func Main() {
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-	listenUrl := util.MustOsGetEnv("API_LISTEN_URL")
-	srvr := http.NewServeMux()
-	srvr.HandleFunc("/", MainHandler)
-	log.Printf("listening on %s", listenUrl)
-	log.Fatal(http.ListenAndServe(listenUrl, srvr))
-}
+	// Initialize a new Fiber app
+	app := fiber.New()
 
-func MainHandler(w http.ResponseWriter, httpReq *http.Request) {
-	req := &Req{Req: server.Req{Request: httpReq}}
-	resp := &Resp{Resp: server.Resp{ResponseWriter: w}}
+	// Route to serve static files (like HTML, CSS, etc.)
+	app.Static("/", "./public")
 
-	url := req.URL.Path
-	if url != "/" {
-		url = strings.TrimRight(req.URL.Path, "/")
-	}
+	// Simple route: GET request for root path "/"
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Welcome to the User API!")
+	})
 
-	fmt.Println(req.Method, url)
+	// Route to get all users
+	app.Get("/users", func(c *fiber.Ctx) error {
+		return c.JSON(users)
+	})
 
-	// Routing & authorization.
-	// revive:disable
-	if req.Method == "GET" {
-		if url == "/api/v1/company/info" {
-			CompanyInfo(req, resp)
-			return
-		} else {
-			resp.Send(http.StatusNotFound)
-			return
+	// Route to get a single user by ID
+	app.Get("/users/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid user ID")
 		}
-	} else if req.Method == "POST" {
-		if url == "/api/v1/company/create" {
-			CompanyCreate(req, resp)
-			return
-		} else {
-			resp.Send(http.StatusNotFound)
-			return
+
+		for _, user := range users {
+			if user.ID == id {
+				return c.JSON(user)
+			}
 		}
-	} else if req.Method == "PATCH" {
-		if url == "/api/v1/company/update" {
-			CompanyUpdate(req, resp)
-			return
-		} else {
-			resp.Send(http.StatusNotFound)
-			return
+		return c.Status(fiber.StatusNotFound).SendString("User not found")
+	})
+
+	// Route to create a new user
+	app.Post("/users", func(c *fiber.Ctx) error {
+		user := new(User)
+
+		// Parse the incoming request body
+		if err := c.BodyParser(user); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Failed to parse request")
 		}
-	} else if req.Method == "DELETE" {
-		if url == "/api/v1/company/delete" {
-			CompanyDelete(req, resp)
-			return
-		} else {
-			resp.Send(http.StatusNotFound)
-			return
+
+		user.ID = len(users) + 1
+		users = append(users, *user)
+		return c.Status(fiber.StatusCreated).JSON(user)
+	})
+
+	// Route to update an existing user
+	app.Put("/users/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid user ID")
 		}
-	} else {
-		resp.Send(http.StatusMethodNotAllowed)
-		return
-	}
+
+		updatedUser := new(User)
+		if err := c.BodyParser(updatedUser); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Failed to parse request")
+		}
+
+		for i, user := range users {
+			if user.ID == id {
+				users[i].Name = updatedUser.Name
+				users[i].Age = updatedUser.Age
+				return c.JSON(users[i])
+			}
+		}
+		return c.Status(fiber.StatusNotFound).SendString("User not found")
+	})
+
+	// Route to delete a user by ID
+	app.Delete("/users/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid user ID")
+		}
+
+		for i, user := range users {
+			if user.ID == id {
+				users = append(users[:i], users[i+1:]...)
+				return c.SendString("User deleted successfully")
+			}
+		}
+		return c.Status(fiber.StatusNotFound).SendString("User not found")
+	})
+
+	app.Listen(os.Getenv("API_LISTEN_URL"))
 }
